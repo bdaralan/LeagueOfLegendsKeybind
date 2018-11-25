@@ -11,6 +11,8 @@
 		2C1925FE21A9C7EA00F36E6C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1925FD21A9C7EA00F36E6C /* ViewController.swift */; };
 		2C19260021A9C7EB00F36E6C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C1925FF21A9C7EB00F36E6C /* Assets.xcassets */; };
 		2C19260321A9C7EB00F36E6C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C19260121A9C7EB00F36E6C /* Main.storyboard */; };
+		2C19260C21A9C83000F36E6C /* KeybindFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C19260B21A9C83000F36E6C /* KeybindFileManager.swift */; };
+		2C19261021AA2D6A00F36E6C /* Keybind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C19260F21AA2D6A00F36E6C /* Keybind.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +23,8 @@
 		2C19260221A9C7EB00F36E6C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2C19260421A9C7EB00F36E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C19260521A9C7EB00F36E6C /* LoLKeybind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LoLKeybind.entitlements; sourceTree = "<group>"; };
+		2C19260B21A9C83000F36E6C /* KeybindFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeybindFileManager.swift; sourceTree = "<group>"; };
+		2C19260F21AA2D6A00F36E6C /* Keybind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keybind.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,10 +59,12 @@
 			children = (
 				2C1925FB21A9C7EA00F36E6C /* AppDelegate.swift */,
 				2C1925FD21A9C7EA00F36E6C /* ViewController.swift */,
+				2C19260F21AA2D6A00F36E6C /* Keybind.swift */,
 				2C1925FF21A9C7EB00F36E6C /* Assets.xcassets */,
 				2C19260121A9C7EB00F36E6C /* Main.storyboard */,
 				2C19260421A9C7EB00F36E6C /* Info.plist */,
 				2C19260521A9C7EB00F36E6C /* LoLKeybind.entitlements */,
+				2C19260B21A9C83000F36E6C /* KeybindFileManager.swift */,
 			);
 			path = LoLKeybind;
 			sourceTree = "<group>";
@@ -133,7 +139,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C19260C21A9C83000F36E6C /* KeybindFileManager.swift in Sources */,
 				2C1925FE21A9C7EA00F36E6C /* ViewController.swift in Sources */,
+				2C19261021AA2D6A00F36E6C /* Keybind.swift in Sources */,
 				2C1925FC21A9C7EA00F36E6C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

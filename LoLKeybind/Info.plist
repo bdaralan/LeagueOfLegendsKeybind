@@ -28,5 +28,9 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>lolPersistedSettingsPath</key>
+	<string>League of Legends.app/Contents/LoL/Config</string>
+	<key>lolPersistedSettingsFileName</key>
+	<string>PersistedSettings</string>
 </dict>
 </plist>

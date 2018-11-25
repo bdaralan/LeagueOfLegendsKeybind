@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="11134" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11134"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -54,7 +56,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="File" id="dMs-cI-mzQ">
+                            <menuItem title="File" hidden="YES" id="dMs-cI-mzQ">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="bib-Uj-vzu">
                                     <items>
@@ -117,7 +119,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Edit" id="5QF-Oa-p0T">
+                            <menuItem title="Edit" hidden="YES" id="5QF-Oa-p0T">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Edit" id="W48-6f-4Dl">
                                     <items>
@@ -336,7 +338,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Format" id="jxT-CU-nIS">
+                            <menuItem title="Format" hidden="YES" id="jxT-CU-nIS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Format" id="GEO-Iw-cKr">
                                     <items>
@@ -598,7 +600,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="View" id="H8h-7b-M4v">
+                            <menuItem title="View" hidden="YES" id="H8h-7b-M4v">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="HyV-fh-RgO">
                                     <items>
@@ -630,7 +632,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Window" id="aUF-d1-5bR">
+                            <menuItem title="Window" hidden="YES" id="aUF-d1-5bR">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
                                     <items>
@@ -655,7 +657,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Help" id="wpr-3q-Mcd">
+                            <menuItem title="Help" hidden="YES" id="wpr-3q-Mcd">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
                                     <items>
@@ -673,7 +675,7 @@
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="LoLKeybind" customModuleProvider="target"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -683,11 +685,12 @@
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
+                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <value key="minSize" type="size" width="480" height="270"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -703,15 +706,166 @@
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="LoLKeybind" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vx4-FA-NO7">
+                                <rect key="frame" x="18" y="188" width="444" height="62"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="LoLKeybind" id="1w0-ZB-EuH">
+                                    <font key="font" size="50" name="BebasNeueBold"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9ng-Au-R3i">
+                                <rect key="frame" x="20" y="159" width="440" height="21"/>
+                                <subviews>
+                                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xa2-H1-R2a">
+                                        <rect key="frame" x="-2" y="-3" width="359" height="26"/>
+                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="HEP-yt-Yyn" id="8dX-sv-6Cm">
+                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" id="Cwl-lr-JAa">
+                                                <items>
+                                                    <menuItem title="Item 1" state="on" id="HEP-yt-Yyn"/>
+                                                    <menuItem title="Item 2" id="IFW-hy-Uhh"/>
+                                                    <menuItem title="Item 3" id="XEI-yT-T9A"/>
+                                                </items>
+                                            </menu>
+                                        </popUpButtonCell>
+                                    </popUpButton>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JyW-D5-O0P">
+                                        <rect key="frame" x="356" y="-7" width="47" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="35" id="MJf-da-noh"/>
+                                        </constraints>
+                                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSRefreshTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bJa-mK-in5">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="refreshKeybindBtnClicked:" target="XfG-lQ-9wD" id="KtU-LP-4gO"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jUh-xB-fOY">
+                                        <rect key="frame" x="399" y="-7" width="47" height="32"/>
+                                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarDeleteTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LUS-39-bSf">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="deleteKeybindBtnClicked:" target="XfG-lQ-9wD" id="1ii-0O-xKp"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="jUh-xB-fOY" firstAttribute="width" secondItem="JyW-D5-O0P" secondAttribute="width" id="PFB-bD-0xb"/>
+                                </constraints>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <stackView distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MXZ-UN-k83">
+                                <rect key="frame" x="20" y="31" width="440" height="104"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xsq-zc-erH">
+                                        <rect key="frame" x="-2" y="87" width="444" height="17"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" id="As0-Hx-Vc3">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cOa-tB-vUT">
+                                        <rect key="frame" x="-6" y="51" width="452" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Set Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tBd-HC-W1y">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="setKeybindBtnClicked:" target="XfG-lQ-9wD" id="QDC-82-wxI"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XaH-Ja-6pk">
+                                        <rect key="frame" x="-6" y="22" width="452" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Load Keybinds" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tN2-la-cEh">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="loadKeybindsBtnClicked:" target="XfG-lQ-9wD" id="QXz-XK-0lg"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gg8-58-wNT">
+                                        <rect key="frame" x="-6" y="-7" width="452" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Save Current Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VOf-4B-RSy">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="saveClientKeybindBtnClicked:" target="XfG-lQ-9wD" id="heP-kF-TKS"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Gg8-58-wNT" secondAttribute="trailing" id="HsN-dV-Kwg"/>
+                                    <constraint firstItem="xsq-zc-erH" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="WSv-dx-pR7"/>
+                                    <constraint firstItem="cOa-tB-vUT" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="cJI-4h-hMh"/>
+                                    <constraint firstAttribute="trailing" secondItem="XaH-Ja-6pk" secondAttribute="trailing" id="d6N-Eb-dc7"/>
+                                    <constraint firstAttribute="trailing" secondItem="xsq-zc-erH" secondAttribute="trailing" id="moB-fE-xBe"/>
+                                    <constraint firstItem="Gg8-58-wNT" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="qt8-rZ-Ltq"/>
+                                    <constraint firstItem="XaH-Ja-6pk" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="wx8-Ev-IUf"/>
+                                    <constraint firstAttribute="trailing" secondItem="cOa-tB-vUT" secondAttribute="trailing" id="yPW-wv-NM8"/>
+                                </constraints>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="MXZ-UN-k83" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="AQ5-mj-l4c"/>
+                            <constraint firstItem="9ng-Au-R3i" firstAttribute="top" secondItem="vx4-FA-NO7" secondAttribute="bottom" constant="8" id="FY9-o7-GYy"/>
+                            <constraint firstItem="MXZ-UN-k83" firstAttribute="top" secondItem="9ng-Au-R3i" secondAttribute="bottom" constant="24" id="PHe-0Z-G6b"/>
+                            <constraint firstItem="9ng-Au-R3i" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="dkt-f3-jV2"/>
+                            <constraint firstAttribute="trailing" secondItem="MXZ-UN-k83" secondAttribute="trailing" constant="20" id="eB2-2l-wKZ"/>
+                            <constraint firstAttribute="trailing" secondItem="9ng-Au-R3i" secondAttribute="trailing" constant="20" id="k2S-Fg-4k1"/>
+                            <constraint firstItem="vx4-FA-NO7" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="pz0-OH-VWG"/>
+                            <constraint firstItem="vx4-FA-NO7" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="tRi-6y-HFB"/>
+                            <constraint firstAttribute="trailing" secondItem="vx4-FA-NO7" secondAttribute="trailing" constant="20" id="xa3-Mg-Wbo"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="deleteKeybindBtn" destination="jUh-xB-fOY" id="nTy-QP-Yuf"/>
+                        <outlet property="keybindPopUpBtn" destination="xa2-H1-R2a" id="b4T-24-w9f"/>
+                        <outlet property="selectedKeybindLabel" destination="xsq-zc-erH" id="rT5-BC-ab7"/>
+                        <outlet property="setKeybindBtn" destination="cOa-tB-vUT" id="WFe-HB-Rnc"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="655"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSRefreshTemplate" width="11" height="15"/>
+        <image name="NSTouchBarDeleteTemplate" width="15" height="30"/>
+    </resources>
 </document>
