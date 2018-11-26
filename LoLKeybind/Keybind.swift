@@ -11,5 +11,5 @@ import Foundation
 
 struct Keybind {
     let fileName: String
-    let fileUrl: URL?
+    let fileUrl: URL
 }

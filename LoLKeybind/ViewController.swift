@@ -26,29 +26,6 @@ class ViewController: NSViewController {
     
     private var keybinds: [Keybind] = []
     
-    lazy var fileManager = FileManager.default
-    lazy var applicationDir: URL? = FileManager.default.urls(for: .applicationDirectory, in: .systemDomainMask).first
-    lazy var documentDir: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-    lazy var lolKeybindDir: URL? = documentDir?.appendingPathComponent("LoLKeybind", isDirectory: true)
-    
-    lazy var clientPersistedSettingsJSONFileUrl: URL? = {
-        let plist = Bundle.main.infoDictionary ?? [:]
-        guard let applicationDir = self.applicationDir, let lolKeybindDir = self.lolKeybindDir else {
-            showErrorAlert(message: "Failed to access application or LoLKeybind directory")
-            return nil
-        }
-        
-        let lolPersistedSettingsPath = plist["lolPersistedSettingsPath"] as? String ?? ""
-        let persistedSettingsFileName = plist["lolPersistedSettingsFileName"] as? String ?? ""
-        let persistedSettingsFileExtension = "json"
-        
-        let lolPersistedSettingDir = applicationDir.appendingPathComponent(lolPersistedSettingsPath, isDirectory: true)
-        let persistedSettingJSONFileUrl = lolPersistedSettingDir.appendingPathComponent(persistedSettingsFileName).appendingPathExtension(persistedSettingsFileExtension)
-        return persistedSettingJSONFileUrl
-    }()
-    
-    private let kLastSelectedKeybind = "kLastSelectedKeybind"
-    
     
     // MARK: - Override Behavior
     
@@ -60,16 +37,59 @@ class ViewController: NSViewController {
     
     // MARK: - Action
     
+    @IBAction private func openLolKeybindFolderBtnClicked(_ sender: NSButton) {
+        guard let lolKeybindDir = FileHandler.default.lolKeybindDir else { return }
+        NSWorkspace.shared.open(lolKeybindDir)
+    }
+    
+    /// Update the client keybind with user's selected keybind
     @IBAction private func setKeybindBtnClicked(_ sender: NSButton) {
-        setCurrentSelectedKeybind()
+        let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
+        guard selectedIndex >= 0, selectedIndex < keybinds.count else { return }
+        let keybindUrl = keybinds[selectedIndex].fileUrl
+        FileHandler.default.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybindUrl) { (error) in
+            if let error = error {
+                showErrorAlert(error: error)
+            } else {
+                showAlert(title: "Done", message: "\(keybindUrl.lastPathComponentWithoutExtension) keybind is set", runModel: false)
+            }
+        }
     }
     
+    /// Copy all keybind json files from a folder to LoLKeybind folder
     @IBAction private func loadKeybindsBtnClicked(_ sender: NSButton) {
-        chooseKeybindFolderToCopy()
+        guard let window = view.window else { return }
+        openPanel.beginSheetModal(for: window) { (respone) in
+            guard let selectedDir = self.openPanel.directoryURL else {
+                self.showAlert(title: "Failed", message: "Cannot access directory", runModel: true)
+                return
+            }
+            
+            let fileUrls = try? FileManager.default.contentsOfDirectory(at: selectedDir, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
+            let keybindFileUrls = fileUrls?.filter({ $0.pathExtension == "json" }) ?? []
+            FileHandler.default.copyFilesToLoLKeybindDirectory(filesToCopy: keybindFileUrls) { (error) in
+                if let error = error {
+                    self.showErrorAlert(error: error)
+                } else {
+                    let pluralString = keybindFileUrls.count > 1 ? "s" : ""
+                    self.showAlert(title: "Done", message: "copied \(keybindFileUrls.count) keybind\(pluralString)", runModel: false)
+                }
+                self.reloadKeybindPopUpBtn()
+            }
+        }
     }
     
+    /// Copy client current keybind Input.ini key-value pairs to LoLKeybind folder
     @IBAction private func saveClientKeybindBtnClicked(_ sender: NSButton) {
-        saveClientCurrentPersistedSettingsKeybind()
+        FileHandler.default.saveClientCurrentKeybind { (url, error) in
+            if let error = error {
+                showErrorAlert(error: error)
+            } else if let url = url {
+                askUserToNameSavedFile(url: url) { renamed in
+                    self.reloadKeybindPopUpBtn()
+                }
+            }
+        }
     }
     
     @IBAction private func refreshKeybindBtnClicked(_ sender: NSButton) {
@@ -77,14 +97,25 @@ class ViewController: NSViewController {
     }
     
     @IBAction private func deleteKeybindBtnClicked(_ sender: NSButton) {
-        deleteSelectedKeybind()
+        let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
+        guard selectedIndex >= 0, selectedIndex < keybinds.count else { return }
+        let keybindUrl = keybinds[selectedIndex].fileUrl
+        FileHandler.default.deleteFile(at: keybindUrl) { (error) in
+            if let error = error {
+                showErrorAlert(error: error)
+            } else {
+                showAlert(title: "Done", message: "Deleted \(keybindUrl.lastPathComponent)", runModel: false)
+            }
+            self.reloadKeybindPopUpBtn()
+        }
     }
-    
+
     
     // MARK: - Function
     
     private func reloadKeybindPopUpBtn() {
-        keybinds = fetchKeybinds()
+        guard let lolKeybindDir = FileHandler.default.lolKeybindDir else { return }
+        keybinds = FileHandler.default.fetchKeybinds(at: lolKeybindDir)
         keybindPopUpBtn.removeAllItems()
         
         if keybinds.isEmpty {
@@ -98,118 +129,12 @@ class ViewController: NSViewController {
         deleteKeybindBtn.isEnabled = keybindPopUpBtn.isEnabled
     }
     
-    private func setCurrentSelectedKeybind() {
-        let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
-        guard selectedIndex >= 0, selectedIndex < keybinds.count ,let keybindUrl = keybinds[selectedIndex].fileUrl else { return }
-        writeToClientPersistedSettings(keybindUrl: keybindUrl)
-    }
-    
-    private func deleteSelectedKeybind() {
-        let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
-        guard selectedIndex >= 0, selectedIndex < keybinds.count, let keybindUrl = keybinds[selectedIndex].fileUrl else { return }
-        try? fileManager.removeItem(at: keybindUrl)
-        reloadKeybindPopUpBtn()
-    }
-    
-    private func copyJSONFiles(sourceUrl: URL, destinationUrl: URL, createDirectory: Bool) {
-        do {
-            var jsonFileUrls = try fileManager.contentsOfDirectory(at: sourceUrl, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
-            jsonFileUrls = jsonFileUrls.filter({ $0.pathExtension == "json" })
-            
-            if createDirectory, !jsonFileUrls.isEmpty, !fileManager.fileExists(atPath: destinationUrl.path) {
-                try fileManager.createDirectory(at: destinationUrl, withIntermediateDirectories: false, attributes: nil)
-            }
-            
-            for url in jsonFileUrls {
-                let destinationFileUrl = destinationUrl.appendingPathComponent(url.lastPathComponent)
-                try fileManager.copyItem(at: url, to: destinationFileUrl)
-            }
-        } catch {
-            showErrorAlert(error: error) // failed to copy
-        }
-    }
-    
-    private func chooseKeybindFolderToCopy() {
-        guard let window = view.window else { return }
-        openPanel.beginSheetModal(for: window) { (respone) in
-            guard let selectedDir = self.openPanel.directoryURL, let lolKeybindDir = self.lolKeybindDir else { return }
-            self.copyJSONFiles(sourceUrl: selectedDir, destinationUrl: lolKeybindDir, createDirectory: true)
-            self.reloadKeybindPopUpBtn()
-        }
-    }
-    
-    private func writeToClientPersistedSettings(keybindUrl: URL) {
-        guard let persistedSettingsUrl = clientPersistedSettingsJSONFileUrl, let persistedSettingsData = fileManager.contents(atPath: persistedSettingsUrl.path) else {
-            showErrorAlert(message: "Failed to write to client persisted settings file")
-            return
-        }
-        
-        guard let userKeybindData = fileManager.contents(atPath: keybindUrl.path) else {
-            showErrorAlert(message: "Failed to read user keybind file: \(keybindUrl.lastPathComponent)")
-            return
-        }
-        
-        do {
-            let userKeybind = try JSONSerialization.jsonObject(with: userKeybindData, options: [])  as? [String: AnyObject]
-            let clientPersistedSettingsJSON = try JSONSerialization.jsonObject(with: persistedSettingsData, options: []) as? [String: AnyObject]
-            
-            guard var persistedSettingsJSON = clientPersistedSettingsJSON else { return }
-            var filesKeyDict = clientPersistedSettingsJSON?["files"] as? [[String: AnyObject]] ?? []
-            for (index, dict) in filesKeyDict.enumerated() where dict["name"] as? String == "Input.ini" {
-                if let userKeybind = userKeybind {
-                    filesKeyDict[index] = userKeybind
-                    persistedSettingsJSON.updateValue(filesKeyDict as AnyObject, forKey: "files")
-                    let updatedClientPersistedSettingData = try JSONSerialization.data(withJSONObject: persistedSettingsJSON, options: [])
-                    try updatedClientPersistedSettingData.write(to: persistedSettingsUrl, options: [])
-                    return
-                }
-            }
-        } catch {
-            showErrorAlert(error: error) // failed to write user keybind to client
-        }
-    }
-    
-    private func saveClientCurrentPersistedSettingsKeybind() {
-        guard let persistedSettingsUrl = clientPersistedSettingsJSONFileUrl, let persistedSettingsData = fileManager.contents(atPath: persistedSettingsUrl.path) else {
-            showErrorAlert(message: "Failed to read PersistedSetting.json")
-            return
-        }
-        
-        guard let lolKeybindDir = lolKeybindDir else {
-            showErrorAlert(message: "Failed to access LoLKeybind Folder")
-            return
-        }
-        
-        // locate the input keybind key-vale pairs and write to disk
-        // NOTE: Keys: "files", "name", and "Input.ini" needs to be updated manually if needed
-        do {
-            let persistedSettingsJSON = try JSONSerialization.jsonObject(with: persistedSettingsData, options: []) as? [String: AnyObject]
-            let filesKeyDict = persistedSettingsJSON?["files"] as? [[String: AnyObject]] ?? []
-            
-            for dict in filesKeyDict where dict["name"] as? String == "Input.ini" {
-                if !fileManager.fileExists(atPath: lolKeybindDir.path) {
-                    try fileManager.createDirectory(at: lolKeybindDir, withIntermediateDirectories: false, attributes: nil)
-                }
-                
-                let urlToWrite = lolKeybindDir.appendingPathComponent("Copied Keybind.json")
-                let keybindJSONToWrite = try JSONSerialization.data(withJSONObject: dict, options: [])
-                try keybindJSONToWrite.write(to: urlToWrite, options: [])
-                askUserToNameCurrentPerstistedSettingsSavedFile(url: urlToWrite) {
-                    self.reloadKeybindPopUpBtn()
-                }
-            }
-        } catch {
-            showErrorAlert(error: error)
-        }
-    }
-    
-    private func askUserToNameCurrentPerstistedSettingsSavedFile(url: URL, completion: @escaping () -> Void) {
-        let fileExtension = url.pathExtension
-        let fileDefaultName = url.lastPathComponent.replacingOccurrences(of: ".\(fileExtension)", with: "")
+    private func askUserToNameSavedFile(url: URL, completion: @escaping (Bool) -> Void) {
+        let fileDefaultName = url.lastPathComponentWithoutExtension
         
         let alert = NSAlert()
         alert.messageText = "Saved Current Keybind"
-        alert.informativeText = "File name"
+        alert.informativeText = "File name (cannot use duplicated name)"
         alert.alertStyle = .informational
         
         guard let window = view.window else {
@@ -220,31 +145,19 @@ class ViewController: NSViewController {
         let textField = NSTextField(string: fileDefaultName)
         alert.accessoryView = textField
         alert.accessoryView?.frame.size.width = 200
+        
         alert.beginSheetModal(for: window) { (response) in
             let inputName = textField.stringValue.trimmingCharacters(in: .whitespaces)
             let fileNewName = inputName.isEmpty ? fileDefaultName : inputName
-            let newUrl = url.deletingLastPathComponent().appendingPathComponent(fileNewName).appendingPathExtension(fileExtension)
-            try? self.fileManager.moveItem(at: url, to: newUrl)
-            completion()
+            FileHandler.default.renameFile(at: url, to: fileNewName) { (error) in
+                if error != nil {
+                    self.askUserToNameSavedFile(url: url, completion: completion)
+                } else {
+                    self.showAlert(title: "Done", message: "\(fileNewName) keybind is saved", runModel: false)
+                    completion(error != nil)
+                }
+            }
         }
-    }
-    
-    /// Store the given `urlPath` to `UserDefaults`. Pass `nil` to remove.
-    private func rememberSelectedKeybind(urlPath: String?) {
-        let userDefaults = UserDefaults.standard
-        if let urlPath = urlPath {
-            userDefaults.set(urlPath, forKey: kLastSelectedKeybind)
-        } else {
-            userDefaults.removeObject(forKey: kLastSelectedKeybind)
-        }
-    }
-    
-    private func fetchKeybinds() -> [Keybind] {
-        guard let lolKeybindDir = lolKeybindDir else { return [] }
-        var urls = try? fileManager.contentsOfDirectory(at: lolKeybindDir, includingPropertiesForKeys: nil, options: [])
-        urls = urls?.filter({ $0.pathExtension == "json" }).sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
-        let keybinds = urls?.compactMap({ Keybind(fileName: $0.lastPathComponent.replacingOccurrences(of: ".\($0.pathExtension)", with: ""), fileUrl: $0) })
-        return keybinds ?? []
     }
     
     private func showErrorAlert(error: Error) {
@@ -252,10 +165,15 @@ class ViewController: NSViewController {
         alert.runModal()
     }
     
-    private func showErrorAlert(message: String) {
+    private func showAlert(title: String, message: String, runModel: Bool) {
         let alert = NSAlert()
-        alert.messageText = "Error"
+        alert.messageText = title
         alert.informativeText = message
-        alert.runModal()
+        
+        if runModel {
+            alert.runModal()
+        } else if let windown = view.window {
+            alert.beginSheetModal(for: windown, completionHandler: nil)
+        }
     }
 }

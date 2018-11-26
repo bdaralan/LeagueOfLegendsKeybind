@@ -687,7 +687,6 @@
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
                     <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
                         <value key="minSize" type="size" width="480" height="270"/>
@@ -723,7 +722,7 @@
                                 <rect key="frame" x="20" y="159" width="440" height="21"/>
                                 <subviews>
                                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xa2-H1-R2a">
-                                        <rect key="frame" x="-2" y="-3" width="359" height="26"/>
+                                        <rect key="frame" x="-2" y="-3" width="316" height="26"/>
                                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="HEP-yt-Yyn" id="8dX-sv-6Cm">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="menu"/>
@@ -737,7 +736,7 @@
                                         </popUpButtonCell>
                                     </popUpButton>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JyW-D5-O0P">
-                                        <rect key="frame" x="356" y="-7" width="47" height="32"/>
+                                        <rect key="frame" x="313" y="-7" width="47" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="35" id="MJf-da-noh"/>
                                         </constraints>
@@ -750,7 +749,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jUh-xB-fOY">
-                                        <rect key="frame" x="399" y="-7" width="47" height="32"/>
+                                        <rect key="frame" x="356" y="-7" width="47" height="32"/>
                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarDeleteTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LUS-39-bSf">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -759,16 +758,29 @@
                                             <action selector="deleteKeybindBtnClicked:" target="XfG-lQ-9wD" id="1ii-0O-xKp"/>
                                         </connections>
                                     </button>
+                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qOc-ap-XDb">
+                                        <rect key="frame" x="399" y="-7" width="47" height="32"/>
+                                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSFolder" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="kAv-qS-E8h">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="openLolKeybindFolderBtnClicked:" target="XfG-lQ-9wD" id="BS2-JS-HBR"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="jUh-xB-fOY" firstAttribute="width" secondItem="JyW-D5-O0P" secondAttribute="width" id="PFB-bD-0xb"/>
+                                    <constraint firstItem="qOc-ap-XDb" firstAttribute="width" secondItem="jUh-xB-fOY" secondAttribute="width" id="iAu-WG-9sR"/>
                                 </constraints>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
@@ -787,7 +799,7 @@
                                     </textField>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cOa-tB-vUT">
                                         <rect key="frame" x="-6" y="51" width="452" height="32"/>
-                                        <buttonCell key="cell" type="push" title="Set Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tBd-HC-W1y">
+                                        <buttonCell key="cell" type="push" title="Set Selected Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tBd-HC-W1y">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -797,7 +809,7 @@
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XaH-Ja-6pk">
                                         <rect key="frame" x="-6" y="22" width="452" height="32"/>
-                                        <buttonCell key="cell" type="push" title="Load Keybinds" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tN2-la-cEh">
+                                        <buttonCell key="cell" type="push" title="Load Keybinds From Folder" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tN2-la-cEh">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -807,7 +819,7 @@
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gg8-58-wNT">
                                         <rect key="frame" x="-6" y="-7" width="452" height="32"/>
-                                        <buttonCell key="cell" type="push" title="Save Current Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VOf-4B-RSy">
+                                        <buttonCell key="cell" type="push" title="Save Client's Current Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VOf-4B-RSy">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -865,6 +877,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="NSFolder" width="32" height="32"/>
         <image name="NSRefreshTemplate" width="11" height="15"/>
         <image name="NSTouchBarDeleteTemplate" width="15" height="30"/>
     </resources>
