@@ -48,10 +48,20 @@ class ViewController: NSViewController {
         guard selectedIndex >= 0, selectedIndex < keybinds.count else { return }
         let keybindUrl = keybinds[selectedIndex].fileUrl
         FileHandler.default.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybindUrl) { (error) in
-            if let error = error {
-                showErrorAlert(error: error)
-            } else {
+            guard let error = error as NSError? else {
                 showAlert(title: "Done", message: "\(keybindUrl.lastPathComponentWithoutExtension) keybind is set", runModel: false)
+                return
+            }
+            
+            if error.domain == "FileNotFound", error.code == 404 {
+                let message = """
+                Cannot find \(keybindUrl.lastPathComponentWithoutExtension) keybind
+                - Make sure the file is in the \(FileHandler.default.lolKeybindFolderName) folder or
+                - Try to refresh keybind for available list
+                """
+                showAlert(title: error.domain, message: message, runModel: true)
+            } else {
+                showErrorAlert(error: error)
             }
         }
     }

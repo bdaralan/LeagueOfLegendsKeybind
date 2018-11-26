@@ -80,6 +80,12 @@ class FileHandler {
             let persistedSettingsData = fileManager.contents(atPath: persistedSettingsFileUrl.path) else {
                 let error = NSError(domain: "FileNotFound", code: 1, userInfo: nil)
                 completion(error)
+                return
+        }
+        
+        guard fileManager.fileExists(atPath: keybindToWriteUrl.path) else {
+            let error = NSError(domain: "FileNotFound", code: 404, userInfo: nil)
+            completion(error)
             return
         }
 
