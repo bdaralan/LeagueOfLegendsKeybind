@@ -14,6 +14,7 @@ class ViewController: NSViewController {
     @IBOutlet private var selectedKeybindLabel: NSTextField!
     @IBOutlet private var setKeybindBtn: NSButton!
     @IBOutlet private var deleteKeybindBtn: NSButton!
+    @IBOutlet private var currentSetKeybindLbl: NSTextField!
     
     private lazy var openPanel: NSOpenPanel = {
         let panel = NSOpenPanel()
@@ -32,6 +33,7 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadKeybindPopUpBtn()
+        reloadLastSetKeybindLabelString()
     }
     
     
@@ -50,6 +52,8 @@ class ViewController: NSViewController {
         FileHandler.default.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybindUrl) { (error) in
             guard let error = error as NSError? else {
                 showAlert(title: "Done", message: "\(keybindUrl.lastPathComponentWithoutExtension) keybind is set", runModel: false)
+                FileHandler.default.rememberSetKeybindUrlPath(keybindUrl.path)
+                reloadLastSetKeybindLabelString()
                 return
             }
             
@@ -115,6 +119,8 @@ class ViewController: NSViewController {
                 showErrorAlert(error: error)
             } else {
                 showAlert(title: "Done", message: "Deleted \(keybindUrl.lastPathComponent)", runModel: false)
+                FileHandler.default.rememberSetKeybindUrlPath(nil)
+                reloadLastSetKeybindLabelString()
             }
             self.reloadKeybindPopUpBtn()
         }
@@ -168,6 +174,14 @@ class ViewController: NSViewController {
                 }
             }
         }
+    }
+    
+    private func reloadLastSetKeybindLabelString() {
+        guard let lastSetKeybindUrl = FileHandler.default.previousSetKeybindUrl() else {
+            currentSetKeybindLbl.stringValue = "LOLKEYBIND"
+            return
+        }
+        currentSetKeybindLbl.stringValue = lastSetKeybindUrl.lastPathComponentWithoutExtension
     }
     
     private func showErrorAlert(error: Error) {

@@ -20,7 +20,7 @@ class FileHandler {
     
     private let kPersistedSettingsPath = "lolPersistedSettingsPath" // plist
     private let kPersistedSettingsFileName = "lolPersistedSettingsFileName" // plist
-    private let kLastSelectedKeybind = "kLastSelectedKeybind" // userdefaults
+    private let kLastSetKeybind = "kLastSelectedKeybind" // userdefaults
     private let kPersistedSettingInputDict = "files" // client dictionary key
     
     let lolKeybindFolderName = "LoLKeybind"
@@ -192,13 +192,18 @@ class FileHandler {
     }
     
     /// Store the given `urlPath` to `UserDefaults`. Pass `nil` to remove.
-    func rememberSelectedKeybind(urlPath: String?) {
+    func rememberSetKeybindUrlPath(_ urlPath: String?) {
         let userDefaults = UserDefaults.standard
         if let urlPath = urlPath {
-            userDefaults.set(urlPath, forKey: kLastSelectedKeybind)
+            userDefaults.set(urlPath, forKey: kLastSetKeybind)
         } else {
-            userDefaults.removeObject(forKey: kLastSelectedKeybind)
+            userDefaults.removeObject(forKey: kLastSetKeybind)
         }
+    }
+    
+    func previousSetKeybindUrl() -> URL? {
+        guard let path = UserDefaults.standard.string(forKey: kLastSetKeybind) else { return nil }
+        return URL(fileURLWithPath: path)
     }
     
     func fetchKeybinds(at url: URL) -> [Keybind] {

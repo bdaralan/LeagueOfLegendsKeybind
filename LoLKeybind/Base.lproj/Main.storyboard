@@ -707,22 +707,22 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="LoLKeybind" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="492" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vx4-FA-NO7">
-                                <rect key="frame" x="18" y="188" width="444" height="62"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="LoLKeybind" id="1w0-ZB-EuH">
-                                    <font key="font" size="50" name="BebasNeueBold"/>
+                                <rect key="frame" x="18" y="220" width="456" height="30"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="LOLKEYBIND" id="1w0-ZB-EuH">
+                                    <font key="font" size="25" name=".AppleSystemUIFont"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9ng-Au-R3i">
-                                <rect key="frame" x="20" y="159" width="440" height="21"/>
+                                <rect key="frame" x="20" y="191" width="452" height="21"/>
                                 <subviews>
                                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xa2-H1-R2a">
-                                        <rect key="frame" x="-2" y="-3" width="316" height="26"/>
+                                        <rect key="frame" x="-2" y="-3" width="328" height="26"/>
                                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="HEP-yt-Yyn" id="8dX-sv-6Cm">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="menu"/>
@@ -736,7 +736,7 @@
                                         </popUpButtonCell>
                                     </popUpButton>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JyW-D5-O0P">
-                                        <rect key="frame" x="313" y="-7" width="47" height="32"/>
+                                        <rect key="frame" x="325" y="-7" width="47" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="35" id="MJf-da-noh"/>
                                         </constraints>
@@ -749,8 +749,8 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jUh-xB-fOY">
-                                        <rect key="frame" x="356" y="-7" width="47" height="32"/>
-                                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarDeleteTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LUS-39-bSf">
+                                        <rect key="frame" x="368" y="-7" width="47" height="32"/>
+                                        <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSTouchBarDeleteTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LUS-39-bSf">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
@@ -759,7 +759,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qOc-ap-XDb">
-                                        <rect key="frame" x="399" y="-7" width="47" height="32"/>
+                                        <rect key="frame" x="411" y="-7" width="47" height="32"/>
                                         <buttonCell key="cell" type="push" bezelStyle="rounded" image="NSFolder" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="kAv-qS-E8h">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -787,10 +787,10 @@
                                 </customSpacing>
                             </stackView>
                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MXZ-UN-k83">
-                                <rect key="frame" x="20" y="31" width="440" height="104"/>
+                                <rect key="frame" x="20" y="63" width="452" height="104"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xsq-zc-erH">
-                                        <rect key="frame" x="-2" y="87" width="444" height="17"/>
+                                        <rect key="frame" x="-2" y="87" width="456" height="17"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" id="As0-Hx-Vc3">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -798,7 +798,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cOa-tB-vUT">
-                                        <rect key="frame" x="-6" y="51" width="452" height="32"/>
+                                        <rect key="frame" x="-6" y="51" width="464" height="32"/>
                                         <buttonCell key="cell" type="push" title="Set Selected Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tBd-HC-W1y">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -808,7 +808,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XaH-Ja-6pk">
-                                        <rect key="frame" x="-6" y="22" width="452" height="32"/>
+                                        <rect key="frame" x="-6" y="22" width="464" height="32"/>
                                         <buttonCell key="cell" type="push" title="Load Keybinds From Folder" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tN2-la-cEh">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -818,7 +818,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gg8-58-wNT">
-                                        <rect key="frame" x="-6" y="-7" width="452" height="32"/>
+                                        <rect key="frame" x="-6" y="-7" width="464" height="32"/>
                                         <buttonCell key="cell" type="push" title="Save Client's Current Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="VOf-4B-RSy">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -865,6 +865,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="currentSetKeybindLbl" destination="vx4-FA-NO7" id="3hs-9O-S76"/>
                         <outlet property="deleteKeybindBtn" destination="jUh-xB-fOY" id="nTy-QP-Yuf"/>
                         <outlet property="keybindPopUpBtn" destination="xa2-H1-R2a" id="b4T-24-w9f"/>
                         <outlet property="selectedKeybindLabel" destination="xsq-zc-erH" id="rT5-BC-ab7"/>
