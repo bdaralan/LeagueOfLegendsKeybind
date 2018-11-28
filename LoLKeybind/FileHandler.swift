@@ -9,6 +9,12 @@
 import Foundation
 
 
+// MARK: - Notification Key
+
+let kApplicationDidDeleteKeybind = "kApplicationDidDeleteKeybind"
+let kApplicationDidSetKeybind = "kApplicationDidSetKeybind"
+
+
 class FileHandler {
     
     static let `default` = FileHandler()

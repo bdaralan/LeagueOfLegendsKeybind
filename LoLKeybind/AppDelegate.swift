@@ -10,17 +10,13 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
+    
+    let statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    var availableKeybinds: [Keybind] = []
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+        setupStatusBarItem()
+        setupStatusBarItemNotificationObserver(self)
     }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
-    }
-
-
 }
-

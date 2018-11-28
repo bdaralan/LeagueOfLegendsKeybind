@@ -632,7 +632,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Window" hidden="YES" id="aUF-d1-5bR">
+                            <menuItem title="Window" id="aUF-d1-5bR">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
                                     <items>
@@ -787,26 +787,16 @@
                                 </customSpacing>
                             </stackView>
                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MXZ-UN-k83">
-                                <rect key="frame" x="20" y="63" width="452" height="104"/>
+                                <rect key="frame" x="20" y="92" width="452" height="75"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xsq-zc-erH">
-                                        <rect key="frame" x="-2" y="87" width="456" height="17"/>
+                                        <rect key="frame" x="-2" y="58" width="456" height="17"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" id="As0-Hx-Vc3">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cOa-tB-vUT">
-                                        <rect key="frame" x="-6" y="51" width="464" height="32"/>
-                                        <buttonCell key="cell" type="push" title="Set Selected Keybind" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tBd-HC-W1y">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="setKeybindBtnClicked:" target="XfG-lQ-9wD" id="QDC-82-wxI"/>
-                                        </connections>
-                                    </button>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XaH-Ja-6pk">
                                         <rect key="frame" x="-6" y="22" width="464" height="32"/>
                                         <buttonCell key="cell" type="push" title="Load Keybinds From Folder" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tN2-la-cEh">
@@ -831,21 +821,17 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Gg8-58-wNT" secondAttribute="trailing" id="HsN-dV-Kwg"/>
                                     <constraint firstItem="xsq-zc-erH" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="WSv-dx-pR7"/>
-                                    <constraint firstItem="cOa-tB-vUT" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="cJI-4h-hMh"/>
                                     <constraint firstAttribute="trailing" secondItem="XaH-Ja-6pk" secondAttribute="trailing" id="d6N-Eb-dc7"/>
                                     <constraint firstAttribute="trailing" secondItem="xsq-zc-erH" secondAttribute="trailing" id="moB-fE-xBe"/>
                                     <constraint firstItem="Gg8-58-wNT" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="qt8-rZ-Ltq"/>
                                     <constraint firstItem="XaH-Ja-6pk" firstAttribute="leading" secondItem="MXZ-UN-k83" secondAttribute="leading" id="wx8-Ev-IUf"/>
-                                    <constraint firstAttribute="trailing" secondItem="cOa-tB-vUT" secondAttribute="trailing" id="yPW-wv-NM8"/>
                                 </constraints>
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
-                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
-                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
@@ -869,7 +855,6 @@
                         <outlet property="deleteKeybindBtn" destination="jUh-xB-fOY" id="nTy-QP-Yuf"/>
                         <outlet property="keybindPopUpBtn" destination="xa2-H1-R2a" id="b4T-24-w9f"/>
                         <outlet property="selectedKeybindLabel" destination="xsq-zc-erH" id="rT5-BC-ab7"/>
-                        <outlet property="setKeybindBtn" destination="cOa-tB-vUT" id="WFe-HB-Rnc"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

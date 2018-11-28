@@ -12,7 +12,6 @@ class ViewController: NSViewController {
 
     @IBOutlet private var keybindPopUpBtn: NSPopUpButton!
     @IBOutlet private var selectedKeybindLabel: NSTextField!
-    @IBOutlet private var setKeybindBtn: NSButton!
     @IBOutlet private var deleteKeybindBtn: NSButton!
     @IBOutlet private var currentSetKeybindLbl: NSTextField!
     
@@ -32,8 +31,20 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        keybindPopUpBtn.action = #selector(handlePopupBtnDidSelectItem)
+        keybindPopUpBtn.target = self
+    }
+    
+    override func viewWillAppear() {
+        super.viewWillAppear()
         reloadKeybindPopUpBtn()
         reloadLastSetKeybindLabelString()
+        setupNotificationObserver()
+    }
+    
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        NotificationCenter.default.removeObserver(self)
     }
     
     
@@ -42,32 +53,6 @@ class ViewController: NSViewController {
     @IBAction private func openLolKeybindFolderBtnClicked(_ sender: NSButton) {
         guard let lolKeybindDir = FileHandler.default.lolKeybindDir else { return }
         NSWorkspace.shared.open(lolKeybindDir)
-    }
-    
-    /// Update the client keybind with user's selected keybind
-    @IBAction private func setKeybindBtnClicked(_ sender: NSButton) {
-        let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
-        guard selectedIndex >= 0, selectedIndex < keybinds.count else { return }
-        let keybindUrl = keybinds[selectedIndex].fileUrl
-        FileHandler.default.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybindUrl) { (error) in
-            guard let error = error as NSError? else {
-                showAlert(title: "Done", message: "\(keybindUrl.lastPathComponentWithoutExtension) keybind is set", runModel: false)
-                FileHandler.default.rememberSetKeybindUrlPath(keybindUrl.path)
-                reloadLastSetKeybindLabelString()
-                return
-            }
-            
-            if error.domain == "FileNotFound", error.code == 404 {
-                let message = """
-                Cannot find \(keybindUrl.lastPathComponentWithoutExtension) keybind
-                - Make sure the file is in the \(FileHandler.default.lolKeybindFolderName) folder or
-                - Try to refresh keybind for available list
-                """
-                showAlert(title: error.domain, message: message, runModel: true)
-            } else {
-                showErrorAlert(error: error)
-            }
-        }
     }
     
     /// Copy all keybind json files from a folder to LoLKeybind folder
@@ -86,7 +71,8 @@ class ViewController: NSViewController {
                     self.showErrorAlert(error: error)
                 } else {
                     let pluralString = keybindFileUrls.count > 1 ? "s" : ""
-                    self.showAlert(title: "Done", message: "copied \(keybindFileUrls.count) keybind\(pluralString)", runModel: false)
+                    let message = "copied \(keybindFileUrls.count) keybind\(pluralString)"
+                    self.showAlert(title: "Done", message: message, runModel: false)
                 }
                 self.reloadKeybindPopUpBtn()
             }
@@ -113,14 +99,13 @@ class ViewController: NSViewController {
     @IBAction private func deleteKeybindBtnClicked(_ sender: NSButton) {
         let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
         guard selectedIndex >= 0, selectedIndex < keybinds.count else { return }
-        let keybindUrl = keybinds[selectedIndex].fileUrl
-        FileHandler.default.deleteFile(at: keybindUrl) { (error) in
+        let keybind = keybinds[selectedIndex]
+        FileHandler.default.deleteFile(at: keybind.fileUrl) { (error) in
             if let error = error {
                 showErrorAlert(error: error)
             } else {
-                showAlert(title: "Done", message: "Deleted \(keybindUrl.lastPathComponent)", runModel: false)
-                FileHandler.default.rememberSetKeybindUrlPath(nil)
-                reloadLastSetKeybindLabelString()
+                showAlert(title: "Done", message: "Deleted \(keybind.fileUrl.lastPathComponent)", runModel: false)
+                NotificationCenter.default.post(name: .init(kApplicationDidDeleteKeybind), object: keybind)
             }
             self.reloadKeybindPopUpBtn()
         }
@@ -129,10 +114,52 @@ class ViewController: NSViewController {
     
     // MARK: - Function
     
+    /// Update the client keybind with user's selected keybind
+    @objc func handlePopupBtnDidSelectItem(_ sender: NSPopUpButton) {
+        guard sender === keybindPopUpBtn else { return }
+        let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
+        
+        guard selectedIndex >= 0, selectedIndex < keybinds.count else { return }
+        let keybind = keybinds[selectedIndex]
+        FileHandler.default.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybind.fileUrl) { (error) in
+            guard let error = error as NSError? else {
+                let message = "\(keybind.fileUrl.lastPathComponentWithoutExtension) keybind is set"
+                showAlert(title: "Done", message: message, runModel: false)
+                NotificationCenter.default.post(name: .init(kApplicationDidSetKeybind), object: keybind)
+                return
+            }
+            
+            if error.domain == "FileNotFound", error.code == 404 {
+                let message = """
+                Cannot find \(keybind.fileUrl.lastPathComponentWithoutExtension) keybind
+                - Make sure the file is in the \(FileHandler.default.lolKeybindFolderName) folder or
+                - Try to refresh keybind for available list
+                """
+                showAlert(title: error.domain, message: message, runModel: true)
+            } else {
+                showErrorAlert(error: error)
+            }
+        }
+    }
+    
+    @objc private func handlerKeybindDidSetNotification(_ notification: Notification) {
+        guard let keybind = notification.object as? Keybind else { return }
+        FileHandler.default.rememberSetKeybindUrlPath(keybind.fileUrl.path)
+        reloadKeybindPopUpBtn()
+        reloadLastSetKeybindLabelString()
+    }
+    
+    @objc private func handleKeybindDidDeleteNotification(_ notification: Notification) {
+        FileHandler.default.rememberSetKeybindUrlPath(nil)
+        reloadKeybindPopUpBtn()
+        reloadLastSetKeybindLabelString()
+    }
+    
     private func reloadKeybindPopUpBtn() {
+        let fileHandler = FileHandler.default
         guard let lolKeybindDir = FileHandler.default.lolKeybindDir else { return }
-        keybinds = FileHandler.default.fetchKeybinds(at: lolKeybindDir)
         keybindPopUpBtn.removeAllItems()
+        keybinds = fileHandler.fetchKeybinds(at: lolKeybindDir)
         
         if keybinds.isEmpty {
             keybindPopUpBtn.addItem(withTitle: "None")
@@ -140,8 +167,13 @@ class ViewController: NSViewController {
             keybindPopUpBtn.addItems(withTitles: keybinds.compactMap({ $0.fileName }))
         }
         
+        let previousSelectedKeybindName = fileHandler.previousSetKeybindUrl()?.lastPathComponentWithoutExtension ?? ""
+        for (index, item) in keybindPopUpBtn.itemArray.enumerated() {
+            item.state = item.title == previousSelectedKeybindName ? .on : .off
+            item.state == .on ? keybindPopUpBtn.selectItem(at: index) : ()
+        }
+        
         keybindPopUpBtn.isEnabled = !keybinds.isEmpty
-        setKeybindBtn.isEnabled = keybindPopUpBtn.isEnabled
         deleteKeybindBtn.isEnabled = keybindPopUpBtn.isEnabled
     }
     
@@ -182,6 +214,18 @@ class ViewController: NSViewController {
             return
         }
         currentSetKeybindLbl.stringValue = lastSetKeybindUrl.lastPathComponentWithoutExtension
+    }
+    
+    private func setupNotificationObserver() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(
+            self, selector: #selector(handlerKeybindDidSetNotification(_:)),
+            name: .init(rawValue: kApplicationDidSetKeybind), object: nil
+        )
+        notificationCenter.addObserver(
+            self, selector: #selector(handleKeybindDidDeleteNotification(_:)),
+            name: .init(rawValue: kApplicationDidDeleteKeybind), object: nil
+        )
     }
     
     private func showErrorAlert(error: Error) {
