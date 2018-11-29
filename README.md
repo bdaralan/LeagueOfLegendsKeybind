@@ -32,7 +32,7 @@ This app does not use any special techinque to map the key presses. All it does 
 
 If you know what you are doing, you can download the project and run it on your computer. :]
 
-## Where is Window Version?
+## Where is Windows Version?
 
 On the todo list since most players are on Windows, but not sure when... σ(^_^;)
 
