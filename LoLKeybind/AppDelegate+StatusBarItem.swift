@@ -18,6 +18,19 @@ enum StatusBarItemStyle: String {
 }
 
 
+// MARK: - Get Funtion
+
+extension AppDelegate {
+    
+    func availableKeybinds() -> [Keybind] {
+        let fileHandler = FileHandler.default
+        guard let keybindDir = fileHandler.lolKeybindDir else { return [] }
+        let keybinds = fileHandler.fetchKeybinds(at: keybindDir)
+        return keybinds
+    }
+}
+
+
 // MARK: - Function
 
 extension AppDelegate {
@@ -29,8 +42,17 @@ extension AppDelegate {
     }
     
     @objc private func activateSeletecKeybind(_ sender: NSMenuItem) {
-        let keybind = availableKeybinds[sender.tag]
+        let keybinds = availableKeybinds()
         
+        guard sender.tag < keybinds.count else {
+            let alert = NSAlert()
+            alert.messageText = "FileNotFound"
+            alert.informativeText = "Keybind was probably deleted. Try to reload keybinds."
+            alert.runModal()
+            return
+        }
+        
+        let keybind = keybinds[sender.tag]
         let fileHandler = FileHandler.default
         fileHandler.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybind.fileUrl) { (error) in
             if let error = error {
@@ -59,15 +81,25 @@ extension AppDelegate {
     }
     
     @objc private func setupStatusBarItemMenu() {
-        let fileHandler = FileHandler.default
-        guard let keybindDir = fileHandler.lolKeybindDir else { return }
-        availableKeybinds = fileHandler.fetchKeybinds(at: keybindDir)
+        let keybinds = availableKeybinds()
         
+        guard !keybinds.isEmpty else {
+            let menu = NSMenu()
+            menu.addItem(.init(title: "None", action: nil, keyEquivalent: ""))
+            menu.delegate = self
+            statusBarItem.menu = menu
+            return
+        }
+        
+        let fileHandler = FileHandler.default
         let previousSetKeybindUrl = fileHandler.previousSetKeybindUrl()
+        
+        
         let menu = NSMenu()
+        menu.delegate = self
         menu.showsStateColumn = true
         
-        for (index, keybind) in availableKeybinds.enumerated() {
+        for (index, keybind) in keybinds.enumerated() {
             let menuItem = NSMenuItem(
                 title: keybind.fileName,
                 action: #selector(activateSeletecKeybind(_:)),
@@ -96,4 +128,10 @@ extension AppDelegate {
 }
 
 
+extension AppDelegate: NSMenuDelegate {
+    
+    func menuWillOpen(_ menu: NSMenu) {
+        setupStatusBarItemMenu()
+    }
+}
 

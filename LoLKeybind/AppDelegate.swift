@@ -12,7 +12,6 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     let statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    var availableKeybinds: [Keybind] = []
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
