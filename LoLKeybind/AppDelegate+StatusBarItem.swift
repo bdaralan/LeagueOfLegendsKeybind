@@ -37,7 +37,6 @@ extension AppDelegate {
                 let alert = NSAlert(error: error)
                 alert.runModal()
             } else {
-                print("\(keybind.fileName) is set")
                 fileHandler.rememberSetKeybindUrlPath(keybind.fileUrl.path)
                 sender.state = NSControl.StateValue.on
                 sender.menu?.items.forEach({ $0.state = $0.tag == sender.tag ? .on : .off })
@@ -69,7 +68,11 @@ extension AppDelegate {
         menu.showsStateColumn = true
         
         for (index, keybind) in availableKeybinds.enumerated() {
-            let menuItem = NSMenuItem(title: keybind.fileName, action: #selector(activateSeletecKeybind(_:)), keyEquivalent: "")
+            let menuItem = NSMenuItem(
+                title: keybind.fileName,
+                action: #selector(activateSeletecKeybind(_:)),
+                keyEquivalent: ""
+            )
             menuItem.tag = index
             menuItem.state = keybind.fileUrl == previousSetKeybindUrl ? .on : .off
             menu.addItem(menuItem)

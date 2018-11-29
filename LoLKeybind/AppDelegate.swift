@@ -9,7 +9,7 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     let statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     var availableKeybinds: [Keybind] = []
@@ -18,5 +18,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setupStatusBarItem()
         setupStatusBarItemNotificationObserver(self)
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        let window = sender.orderedWindows.first
+        flag ? window?.orderFront(self) : window?.makeKeyAndOrderFront(self)
+        return true
     }
 }
