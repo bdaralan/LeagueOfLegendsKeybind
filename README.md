@@ -28,13 +28,13 @@ Yep, that's it. Now, go grab that pen-Katari-ta!
 
 ## FAQ
 
-1. Why need to select keybind before the game start?
-    - Currently modifying the file during the game does not take any affect.
-    - During the game, League Client does not seem to refresh any modification to the keybind file that is not done directly from the HOTKEYS interface.
-2. Where is Windows version?
+1. Where is Windows version?
     - Since most players are on Windows, it is on the todo list, but not sure when... σ(^_^;)
     - I happen to play league on Mac, so yeah.
     - My strong programming language is Swift, so it will take a while for Windows (will most like to be written in Java). However, if this one goes well, it will definitely boost the motivation.
+2. Why need to select keybind before the game start?
+    - Currently modifying the file during the game does not take any affect.
+    - During the game, League Client does not seem to refresh any modification to the keybind file that is not done directly from the HOTKEYS interface.
 
 ## Contact
 
