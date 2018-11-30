@@ -10,7 +10,7 @@ The app does not use any special technique to map the key presses. All it does i
 
 1. Go to Setting (in game or lobby) > HotKey.
 2. Modify the HotKey to your Ahri's E content.
-3. When done, open the app and click 'Save Client's Current Keybind' button.
+3. When done, open the app and click *Save Client's Current Keybind* button.
 4. Name the newly saved keybind.
 5. Yep, that's it. Repeat the process for other champions.
 
@@ -38,4 +38,4 @@ If you know what you are doing, you can download the project and run it on your 
 On the todo list since most players are on Windows, but not sure when... σ(^_^;)
 
 I happen to play league on Mac, so Mac first (๑° з°๑)
-Also, I am more familiar with Swift, so it will take a while for Windows. However, if this one goes well, it will definitely boost the motivation.
+I also am more of a Swift programming guy, so it will take a while for Windows (will most like to be written in Java). However, if this one goes well, it will definitely boost the motivation.
