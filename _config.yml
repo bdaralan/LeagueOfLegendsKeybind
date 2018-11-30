@@ -1,3 +1,4 @@
+theme: jekyll-theme-cayman
 title: League of Legends Keybind
 logo: /assets/images/logo.png
-theme: jekyll-theme-cayman
+show_downloads: true
