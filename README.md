@@ -1,6 +1,6 @@
 # League of Legends Keybind
 
-<img src="assets/img/logo.png" class="logo" alt="LoLKeybind">
+<img src="assets/img/logo.png" class="logo" width="25%" alt="LoLKeybind">
 
 A macOS app that allows league of legends players to quickly save and toggle keybind for specific champion.
 
