@@ -2,5 +2,6 @@ theme: jekyll-theme-cayman
 title: League of Legends Keybind
 logo: /assets/img/logo.png
 show_downloads: true
+google_analytics: UA-130183635-1
 github:
   zip_url: https://github.com/iDara09/LeagueOfLegendsKeybind/blob/gh-pages/archive/LoLKeybind.app.zip?raw=true
