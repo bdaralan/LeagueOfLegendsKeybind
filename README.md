@@ -37,5 +37,5 @@ If you know what you are doing, you can download the project and run it on your 
 
 On the todo list since most players are on Windows, but not sure when... σ(^_^;)
 
-I happen to play league on Mac, so Mac first (๑° з°๑)\
+I happen to play league on Mac, so Mac first (๑° з°๑)<br>
 I also am more of a Swift programming guy, so it will take a while for Windows (will most like to be written in Java). However, if this one goes well, it will definitely boost the motivation.
