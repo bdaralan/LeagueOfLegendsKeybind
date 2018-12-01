@@ -1,8 +1,8 @@
 theme: jekyll-theme-cayman
 title: League of Legends Keybind
 logo: /assets/img/logo.png
-show_downloads: true
 google_analytics: UA-130183635-1
+show_downloads: true
 github:
-  mac-os-url: https://github.com/iDara09/LeagueOfLegendsKeybind/blob/gh-pages/archive/LoLKeybind.app.zip?raw=true
-  windows-os-url: https://idara09.github.io/LeagueOfLegendsKeybind/#faq
+  mac-os-download-url: https://github.com/iDara09/LeagueOfLegendsKeybind/releases/download/v1.0.0/LoLKeybind.app.zip
+  windows-os-download-url: https://idara09.github.io/LeagueOfLegendsKeybind/#faq

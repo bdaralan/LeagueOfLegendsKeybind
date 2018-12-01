@@ -19,7 +19,7 @@ Yep, that's it. Just repeat the process for other champions.
 
 ### Toggle Between Keybinds
 
-Allows players to select one of the saved keybinds before the *game start*.
+Allows players to select one of the saved keybinds before the *game starts*.
 
 1. Open the app or click on the app status bar icon.
 2. Select one of the saved keybinds.
@@ -31,7 +31,8 @@ Yep, that's it. Now, go grab that pen-Katari-ta!
 1. Where is Windows version?
     - Since most players are on Windows, it is on the todo list, but not sure when... σ(^_^;)
     - I happen to play league on Mac, so yeah.
-    - My strong programming language is Swift, so it will take a while for Windows (will most likely to be written in Java). It will definitely boost the motivation if this first one goes well. :]
+    - My strong programming language is Swift, so it will take a while for Windows (will most likely to be written in Java).
+    - It will definitely boost the motivation if this first one goes well. :]
 2. Why need to select keybind before the game start?
     - Currently modifying the file during the game does not take any affect.
     - During the game, League Client does not seem to refresh any modification to the keybind file that is not done directly from the HOTKEYS interface.
