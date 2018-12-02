@@ -42,4 +42,4 @@ Yep, that's it. Now, go grab that pen-Katari-ta!
 Say hi or reach me:
 
 - [Twitter](https://twitter.com/lolkeybind)
-- [Email](mailto::lolkeybind@gmail.com)
+- [Email](mailto:lolkeybind@gmail.com)
