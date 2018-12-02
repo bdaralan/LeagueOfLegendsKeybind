@@ -1,5 +1,5 @@
 //
-//  FileHandler.swift
+//  KeybindManager.swift
 //  LoLKeybind
 //
 //  Created by Dara Beng on 11/25/18.
@@ -15,9 +15,9 @@ let kApplicationDidDeleteKeybind = "kApplicationDidDeleteKeybind"
 let kApplicationDidSetKeybind = "kApplicationDidSetKeybind"
 
 
-class FileHandler {
+class KeybindManager {
     
-    static let `default` = FileHandler()
+    static let `default` = KeybindManager()
     
     let fileManager = FileManager.default
     

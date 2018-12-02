@@ -23,9 +23,9 @@ enum StatusBarItemStyle: String {
 extension AppDelegate {
     
     func availableKeybinds() -> [Keybind] {
-        let fileHandler = FileHandler.default
-        guard let keybindDir = fileHandler.lolKeybindDir else { return [] }
-        let keybinds = fileHandler.fetchKeybinds(at: keybindDir)
+        let keybindManager = KeybindManager.default
+        guard let keybindDir = keybindManager.lolKeybindDir else { return [] }
+        let keybinds = keybindManager.fetchKeybinds(at: keybindDir)
         return keybinds
     }
 }
@@ -53,15 +53,16 @@ extension AppDelegate {
         }
         
         let keybind = keybinds[sender.tag]
-        let fileHandler = FileHandler.default
-        fileHandler.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybind.fileUrl) { (error) in
+        let keybindManager = KeybindManager.default
+        keybindManager.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybind.fileUrl) { (error) in
             if let error = error {
                 let alert = NSAlert(error: error)
                 alert.runModal()
             } else {
-                fileHandler.rememberSetKeybindUrlPath(keybind.fileUrl.path)
+                keybindManager.rememberSetKeybindUrlPath(keybind.fileUrl.path)
                 sender.state = NSControl.StateValue.on
                 sender.menu?.items.forEach({ $0.state = $0.tag == sender.tag ? .on : .off })
+                NSSound.play(.done)
                 NotificationCenter.default.post(name: .init(rawValue: kApplicationDidSetKeybind), object: keybind)
             }
         }
@@ -91,8 +92,8 @@ extension AppDelegate {
             return
         }
         
-        let fileHandler = FileHandler.default
-        let previousSetKeybindUrl = fileHandler.previousSetKeybindUrl()
+        let keybindManager = KeybindManager.default
+        let previousSetKeybindUrl = keybindManager.previousSetKeybindUrl()
         
         
         let menu = NSMenu()
