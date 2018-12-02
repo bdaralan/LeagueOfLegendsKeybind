@@ -33,10 +33,13 @@ Yep, that's it. Now, go grab that pen-Katari-ta!
     - I happen to play league on Mac, so yeah.
     - My strong programming language is Swift, so it will take a while for Windows (will most likely to be written in Java).
     - It will definitely boost the motivation if this first one goes well. :]
-2. Why need to select keybind before the game start?
+2. Why keybind not updating when toggle during game?
     - Currently modifying the file during the game does not take any affect.
     - During the game, League Client does not seem to refresh any modification to the keybind file that is not done directly from the HOTKEYS interface.
 
 ## Contact
 
-Say hi or reach me for this project at [email](mailto::diana.moonsilverblade@gmail.com).
+Say hi or reach me:
+
+- [Twitter](https://twitter.com/lolkeybind)
+- [Email](mailto::lolkeybind@gmail.com)
