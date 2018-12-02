@@ -11,9 +11,7 @@ import Cocoa
 class ViewController: NSViewController {
 
     @IBOutlet private var keybindPopUpBtn: NSPopUpButton!
-    @IBOutlet private var selectedKeybindLabel: NSTextField!
     @IBOutlet private var deleteKeybindBtn: NSButton!
-    @IBOutlet private var currentSetKeybindLbl: NSTextField!
     
     private lazy var openPanel: NSOpenPanel = {
         let panel = NSOpenPanel()
@@ -38,7 +36,6 @@ class ViewController: NSViewController {
     override func viewWillAppear() {
         super.viewWillAppear()
         reloadKeybindPopUpBtn()
-        reloadLastSetKeybindLabelString()
         setupNotificationObserver()
     }
     
@@ -126,13 +123,11 @@ class ViewController: NSViewController {
         guard let keybind = notification.object as? Keybind else { return }
         KeybindManager.default.rememberSetKeybindUrlPath(keybind.fileUrl.path)
         reloadKeybindPopUpBtn()
-        reloadLastSetKeybindLabelString()
     }
     
     @objc private func handleKeybindDidDeleteNotification(_ notification: Notification) {
         KeybindManager.default.rememberSetKeybindUrlPath(nil)
         reloadKeybindPopUpBtn()
-        reloadLastSetKeybindLabelString()
     }
     
     private func activateKeybind(_ keybind: Keybind) {
@@ -209,14 +204,6 @@ class ViewController: NSViewController {
                 }
             }
         }
-    }
-    
-    private func reloadLastSetKeybindLabelString() {
-        guard let lastSetKeybindUrl = KeybindManager.default.previousSetKeybindUrl() else {
-            currentSetKeybindLbl.stringValue = "LOLKEYBIND"
-            return
-        }
-        currentSetKeybindLbl.stringValue = lastSetKeybindUrl.lastPathComponentWithoutExtension
     }
     
     private func setupNotificationObserver() {
