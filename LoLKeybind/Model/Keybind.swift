@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Keybind {
+struct Keybind: Equatable {
     let fileName: String
     let fileUrl: URL
 }

@@ -60,6 +60,18 @@ class KeybindManager {
         return persistedSettingFileUrl
     }
     
+    var availableKeybinds: [Keybind] {
+        guard let keybindDir = lolKeybindDir else { return [] }
+        let keybinds = fetchKeybinds(at: keybindDir)
+        return keybinds
+    }
+    
+    var previousSetKeybind: Keybind? {
+        guard let path = UserDefaults.standard.string(forKey: kLastSetKeybind) else { return nil }
+        let url = URL(fileURLWithPath: path)
+        return Keybind(fileName: url.lastPathComponentWithoutExtension, fileUrl: url)
+    }
+    
     
     // MARK: - Function
     
@@ -81,7 +93,7 @@ class KeybindManager {
         }
     }
     
-    func writeKeybindToClientPersistedSettings(keybindToWriteUrl: URL, completion: (Error?) -> Void) {
+    func writeKeybindToClientPersistedSettings(keybindToWrite: Keybind, completion: (Error?) -> Void) {
         guard let persistedSettingsFileUrl = clientPersistedSettingsFileUrl,
             let persistedSettingsData = fileManager.contents(atPath: persistedSettingsFileUrl.path) else {
                 let error = NSError(domain: "FileNotFound", code: 1, userInfo: nil)
@@ -89,13 +101,13 @@ class KeybindManager {
                 return
         }
         
-        guard fileManager.fileExists(atPath: keybindToWriteUrl.path) else {
+        guard fileManager.fileExists(atPath: keybindToWrite.fileUrl.path) else {
             let error = NSError(domain: "FileNotFound", code: 404, userInfo: nil)
             completion(error)
             return
         }
 
-        guard let userKeybindData = fileManager.contents(atPath: keybindToWriteUrl.path) else {
+        guard let userKeybindData = fileManager.contents(atPath: keybindToWrite.fileUrl.path) else {
             let error = NSError(domain: "CannotReadFile", code: 1, userInfo: nil)
             completion(error)
             return
@@ -198,18 +210,13 @@ class KeybindManager {
     }
     
     /// Store the given `urlPath` to `UserDefaults`. Pass `nil` to remove.
-    func rememberSetKeybindUrlPath(_ urlPath: String?) {
+    func rememberSetKeybind(_ keybind: Keybind?) {
         let userDefaults = UserDefaults.standard
-        if let urlPath = urlPath {
+        if let urlPath = keybind?.fileUrl.path {
             userDefaults.set(urlPath, forKey: kLastSetKeybind)
         } else {
             userDefaults.removeObject(forKey: kLastSetKeybind)
         }
-    }
-    
-    func previousSetKeybindUrl() -> URL? {
-        guard let path = UserDefaults.standard.string(forKey: kLastSetKeybind) else { return nil }
-        return URL(fileURLWithPath: path)
     }
     
     func fetchKeybinds(at url: URL) -> [Keybind] {

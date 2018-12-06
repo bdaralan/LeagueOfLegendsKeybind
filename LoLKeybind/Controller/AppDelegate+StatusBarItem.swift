@@ -9,25 +9,13 @@
 import Cocoa
 
 
-enum StatusBarItemStyle: String {
+enum AppStatusBarIconStyle: String { // where String is the correspoding asset's name
     
-    static let kPreferredStatusItemStyle = "kPreferredStatusItem"
+    static let kPreferredIconStyle = "kPreferredIconStyle"
+    static let `default` = AppStatusBarIconStyle.black
     
     case color = "status-item-color"
     case black = "status-item-black"
-}
-
-
-// MARK: - Get Funtion
-
-extension AppDelegate {
-    
-    func availableKeybinds() -> [Keybind] {
-        let keybindManager = KeybindManager.default
-        guard let keybindDir = keybindManager.lolKeybindDir else { return [] }
-        let keybinds = keybindManager.fetchKeybinds(at: keybindDir)
-        return keybinds
-    }
 }
 
 
@@ -35,32 +23,21 @@ extension AppDelegate {
 
 extension AppDelegate {
     
-    func setStatusBarItemStyle(_ style: StatusBarItemStyle) {
-        let imageName = NSImage.Name(style.rawValue)
-        statusBarItem.button?.image = NSImage(named: imageName)
-        UserDefaults.standard.setValue(style.rawValue, forKey: StatusBarItemStyle.kPreferredStatusItemStyle)
-    }
-    
     @objc private func activateSeletecKeybind(_ sender: NSMenuItem) {
-        let keybinds = availableKeybinds()
-        
-        guard sender.tag < keybinds.count else {
-            let alert = NSAlert()
-            alert.messageText = "FileNotFound"
-            alert.informativeText = "Keybind was probably deleted. Try to reload keybinds."
-            alert.runModal()
+        guard sender.tag < availableKeybinds.count else {
+            NSAlert.showKeybindNotFound()
             return
         }
         
-        let keybind = keybinds[sender.tag]
+        let keybind = availableKeybinds[sender.tag]
         let keybindManager = KeybindManager.default
-        keybindManager.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybind.fileUrl) { (error) in
+        
+        keybindManager.writeKeybindToClientPersistedSettings(keybindToWrite: keybind) { (error) in
             if let error = error {
-                let alert = NSAlert(error: error)
-                alert.runModal()
+                NSAlert.show(error)
             } else {
-                keybindManager.rememberSetKeybindUrlPath(keybind.fileUrl.path)
-                sender.state = NSControl.StateValue.on
+                keybindManager.rememberSetKeybind(keybind)
+                sender.state = .on
                 sender.menu?.items.forEach({ $0.state = $0.tag == sender.tag ? .on : .off })
                 NSSound.play(.done)
                 NotificationCenter.default.post(name: .init(rawValue: kApplicationDidSetKeybind), object: keybind)
@@ -74,65 +51,63 @@ extension AppDelegate {
 
 extension AppDelegate {
     
-    func setupStatusBarItem() {
-        let preferredStyleString = UserDefaults.standard.string(forKey: StatusBarItemStyle.kPreferredStatusItemStyle) ?? ""
-        let preferredStyle = StatusBarItemStyle(rawValue: preferredStyleString) ?? .color
-        setStatusBarItemStyle(preferredStyle)
-        setupStatusBarItemMenu()
+    func setupStatusBarIcon() {
+        let preferredStyleString = UserDefaults.standard.string(forKey: AppStatusBarIconStyle.kPreferredIconStyle) ?? ""
+        let preferredStyle = AppStatusBarIconStyle(rawValue: preferredStyleString) ?? .default
+        statusBarIcon.menu = statusBarIconMenu
+        statusBarIconMenu.delegate = self
+        statusBarIconMenu.showsStateColumn = true
+        setAppStatusBarIconStyle(preferredStyle)
+        reloadStatusBarIconMenuItems()
     }
     
-    @objc private func setupStatusBarItemMenu() {
-        let keybinds = availableKeybinds()
+    func setAppStatusBarIconStyle(_ style: AppStatusBarIconStyle) {
+        let imageName = NSImage.Name(style.rawValue)
+        statusBarIcon.button?.image = NSImage(named: imageName)
+        UserDefaults.standard.setValue(style.rawValue, forKey: AppStatusBarIconStyle.kPreferredIconStyle)
+    }
+    
+    @objc private func reloadStatusBarIconMenuItems() {
+        let keybindManager = KeybindManager.default
         
-        guard !keybinds.isEmpty else {
-            let menu = NSMenu()
-            menu.addItem(.init(title: "None", action: nil, keyEquivalent: ""))
-            menu.delegate = self
-            statusBarItem.menu = menu
+        availableKeybinds = keybindManager.availableKeybinds
+        statusBarIconMenu.removeAllItems()
+        
+        guard !availableKeybinds.isEmpty else {
+            statusBarIconMenu.addItem(.init(title: "None", action: nil, keyEquivalent: ""))
             return
         }
         
-        let keybindManager = KeybindManager.default
-        let previousSetKeybindUrl = keybindManager.previousSetKeybindUrl()
+        let previousSetKeybind = keybindManager.previousSetKeybind
+        let activateKeybind = #selector(activateSeletecKeybind(_:))
         
-        
-        let menu = NSMenu()
-        menu.delegate = self
-        menu.showsStateColumn = true
-        
-        for (index, keybind) in keybinds.enumerated() {
-            let menuItem = NSMenuItem(
-                title: keybind.fileName,
-                action: #selector(activateSeletecKeybind(_:)),
-                keyEquivalent: ""
-            )
+        availableKeybinds.enumerated().forEach { (index, keybind) in
+            let menuItem = NSMenuItem(title: keybind.fileName, action: activateKeybind, keyEquivalent: "")
             menuItem.tag = index
-            menuItem.state = keybind.fileUrl == previousSetKeybindUrl ? .on : .off
-            menu.addItem(menuItem)
+            menuItem.state = keybind == previousSetKeybind ? .on : .off
+            statusBarIconMenu.addItem(menuItem)
         }
-        
-        statusBarItem.menu = menu
     }
     
     func setupStatusBarItemNotificationObserver(_ observer: Any) {
         let notificationCenter = NotificationCenter.default
-        let setupStatusBarItemMenuAction = #selector(setupStatusBarItemMenu)
-        notificationCenter.addObserver(
-            observer, selector: setupStatusBarItemMenuAction,
-            name: .init(rawValue: kApplicationDidSetKeybind), object: nil
-        )
-        notificationCenter.addObserver(
-            observer, selector: setupStatusBarItemMenuAction,
-            name: .init(rawValue: kApplicationDidDeleteKeybind), object: nil
-        )
+        let reloadStatusBarMenuItems = #selector(reloadStatusBarIconMenuItems)
+        let keybindDidSet = Notification.Name(kApplicationDidSetKeybind)
+        let keybindDidDelete = Notification.Name(kApplicationDidDeleteKeybind)
+        notificationCenter.addObserver(observer, selector: reloadStatusBarMenuItems, name: keybindDidSet, object: nil)
+        notificationCenter.addObserver(observer, selector: reloadStatusBarMenuItems, name: keybindDidDelete, object: nil)
     }
 }
 
 
 extension AppDelegate: NSMenuDelegate {
     
-    func menuWillOpen(_ menu: NSMenu) {
-        setupStatusBarItemMenu()
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        reloadStatusBarIconMenuItems()
+    }
+    
+    func menu(_ menu: NSMenu, update item: NSMenuItem, at index: Int, shouldCancel: Bool) -> Bool {
+        return true
     }
 }
 

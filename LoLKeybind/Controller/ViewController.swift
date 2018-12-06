@@ -22,7 +22,7 @@ class ViewController: NSViewController {
         return panel
     }()
     
-    private var keybinds: [Keybind] = []
+    private var availableKeybinds: [Keybind] = []
     
     
     // MARK: - Override Behavior
@@ -95,8 +95,8 @@ class ViewController: NSViewController {
     
     @IBAction private func deleteKeybindBtnClicked(_ sender: NSButton) {
         let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
-        guard selectedIndex >= 0, selectedIndex < keybinds.count else { return }
-        let keybind = keybinds[selectedIndex]
+        guard selectedIndex >= 0, selectedIndex < availableKeybinds.count else { return }
+        let keybind = availableKeybinds[selectedIndex]
         KeybindManager.default.deleteFile(at: keybind.fileUrl) { (error) in
             if let error = error {
                 showErrorAlert(error: error)
@@ -114,24 +114,24 @@ class ViewController: NSViewController {
     /// Update the client keybind with user's selected keybind
     @objc func handlePopupBtnDidSelectItem(_ sender: NSPopUpButton) {
         let selectedIndex = keybindPopUpBtn.indexOfSelectedItem
-        guard sender === keybindPopUpBtn, selectedIndex >= 0, selectedIndex < keybinds.count else { return }
-        let keybind = keybinds[selectedIndex]
+        guard sender === keybindPopUpBtn, selectedIndex >= 0, selectedIndex < availableKeybinds.count else { return }
+        let keybind = availableKeybinds[selectedIndex]
         activateKeybind(keybind)
     }
     
     @objc private func handlerKeybindDidSetNotification(_ notification: Notification) {
         guard let keybind = notification.object as? Keybind else { return }
-        KeybindManager.default.rememberSetKeybindUrlPath(keybind.fileUrl.path)
+        KeybindManager.default.rememberSetKeybind(keybind)
         reloadKeybindPopUpBtn()
     }
     
     @objc private func handleKeybindDidDeleteNotification(_ notification: Notification) {
-        KeybindManager.default.rememberSetKeybindUrlPath(nil)
+        KeybindManager.default.rememberSetKeybind(nil)
         reloadKeybindPopUpBtn()
     }
     
     private func activateKeybind(_ keybind: Keybind) {
-        KeybindManager.default.writeKeybindToClientPersistedSettings(keybindToWriteUrl: keybind.fileUrl) { (error) in
+        KeybindManager.default.writeKeybindToClientPersistedSettings(keybindToWrite: keybind) { (error) in
             guard let error = error as NSError? else {
                 let message = "\(keybind.fileUrl.lastPathComponentWithoutExtension) keybind is set"
                 showAlert(title: "Done", message: message, runModel: false)
@@ -155,23 +155,23 @@ class ViewController: NSViewController {
     
     private func reloadKeybindPopUpBtn() {
         let keybindManger = KeybindManager.default
-        guard let lolKeybindDir = KeybindManager.default.lolKeybindDir else { return }
-        keybindPopUpBtn.removeAllItems()
-        keybinds = keybindManger.fetchKeybinds(at: lolKeybindDir)
         
-        if keybinds.isEmpty {
+        availableKeybinds = keybindManger.availableKeybinds
+        keybindPopUpBtn.removeAllItems()
+        
+        if availableKeybinds.isEmpty {
             keybindPopUpBtn.addItem(withTitle: "None")
         } else {
-            keybindPopUpBtn.addItems(withTitles: keybinds.compactMap({ $0.fileName }))
+            keybindPopUpBtn.addItems(withTitles: availableKeybinds.compactMap({ $0.fileName }))
         }
         
-        let previousSelectedKeybindName = keybindManger.previousSetKeybindUrl()?.lastPathComponentWithoutExtension ?? ""
+        let previousSetKeybindName = keybindManger.previousSetKeybind?.fileName ?? ""
         for (index, item) in keybindPopUpBtn.itemArray.enumerated() {
-            item.state = item.title == previousSelectedKeybindName ? .on : .off
+            item.state = item.title == previousSetKeybindName ? .on : .off
             item.state == .on ? keybindPopUpBtn.selectItem(at: index) : ()
         }
         
-        keybindPopUpBtn.isEnabled = !keybinds.isEmpty
+        keybindPopUpBtn.isEnabled = !availableKeybinds.isEmpty
         deleteKeybindBtn.isEnabled = keybindPopUpBtn.isEnabled
     }
     

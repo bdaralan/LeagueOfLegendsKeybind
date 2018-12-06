@@ -14,6 +14,7 @@
 		2C19260C21A9C83000F36E6C /* URLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C19260B21A9C83000F36E6C /* URLExtension.swift */; };
 		2C19261021AA2D6A00F36E6C /* Keybind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C19260F21AA2D6A00F36E6C /* Keybind.swift */; };
 		2C4C955F21AADDA600345D8A /* KeybindManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4C955E21AADDA600345D8A /* KeybindManager.swift */; };
+		2C5D8ACF21B8E257000A1463 /* AlertExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5D8ACE21B8E257000A1463 /* AlertExtension.swift */; };
 		2CA152AE21AF16B800CF9498 /* AppDelegate+StatusBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA152AD21AF16B800CF9498 /* AppDelegate+StatusBarItem.swift */; };
 		2CBE414021B45D7D0051784B /* SoundExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBE413F21B45D7D0051784B /* SoundExtension.swift */; };
 /* End PBXBuildFile section */
@@ -29,6 +30,7 @@
 		2C19260B21A9C83000F36E6C /* URLExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLExtension.swift; sourceTree = "<group>"; };
 		2C19260F21AA2D6A00F36E6C /* Keybind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keybind.swift; sourceTree = "<group>"; };
 		2C4C955E21AADDA600345D8A /* KeybindManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeybindManager.swift; sourceTree = "<group>"; };
+		2C5D8ACE21B8E257000A1463 /* AlertExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertExtension.swift; sourceTree = "<group>"; };
 		2CA152AD21AF16B800CF9498 /* AppDelegate+StatusBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+StatusBarItem.swift"; sourceTree = "<group>"; };
 		2CBE413F21B45D7D0051784B /* SoundExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -99,6 +101,7 @@
 			children = (
 				2C19260B21A9C83000F36E6C /* URLExtension.swift */,
 				2CBE413F21B45D7D0051784B /* SoundExtension.swift */,
+				2C5D8ACE21B8E257000A1463 /* AlertExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 				2C1925FE21A9C7EA00F36E6C /* ViewController.swift in Sources */,
 				2C19261021AA2D6A00F36E6C /* Keybind.swift in Sources */,
 				2C4C955F21AADDA600345D8A /* KeybindManager.swift in Sources */,
+				2C5D8ACF21B8E257000A1463 /* AlertExtension.swift in Sources */,
 				2CA152AE21AF16B800CF9498 /* AppDelegate+StatusBarItem.swift in Sources */,
 				2C1925FC21A9C7EA00F36E6C /* AppDelegate.swift in Sources */,
 				2CBE414021B45D7D0051784B /* SoundExtension.swift in Sources */,

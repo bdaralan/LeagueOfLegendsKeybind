@@ -10,12 +10,14 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
-    
-    let statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+
+    let statusBarIcon = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    let statusBarIconMenu = NSMenu()
+    lazy var availableKeybinds: [Keybind] = KeybindManager.default.availableKeybinds
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        setupStatusBarItem()
+        setupStatusBarIcon()
         setupStatusBarItemNotificationObserver(self)
     }
     
