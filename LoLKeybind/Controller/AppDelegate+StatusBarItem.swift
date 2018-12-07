@@ -101,10 +101,10 @@ extension AppDelegate {
     private func createMenuItems(for keybinds: [Keybind], selectKeybind: Keybind?) -> [NSMenuItem] {
         let activateKeybind = #selector(activateSeletecKeybind(_:))
         let menuItems = keybinds.enumerated().compactMap { (index, keybind) -> NSMenuItem in
-            let item = NSMenuItem(title: keybind.fileName, action: activateKeybind, keyEquivalent: "")
-            item.tag = index
-            item.state = keybind == selectKeybind ? .on : .off
-            return item
+            let meniItem = NSMenuItem(title: keybind.fileName, action: activateKeybind, keyEquivalent: "")
+            meniItem.tag = index
+            meniItem.state = keybind == selectKeybind ? .on : .off
+            return meniItem
         }
         return menuItems
     }
@@ -134,7 +134,8 @@ extension AppDelegate {
 extension AppDelegate {
     
     @objc private func openApplication() {
-        applicationKeyWindow?.makeKeyAndOrderFront(self)
+        applicationMainWindow?.makeKey()
+        applicationMainWindow?.orderFrontRegardless()
     }
     
     @objc private func saveClientCurrentKeybind() {

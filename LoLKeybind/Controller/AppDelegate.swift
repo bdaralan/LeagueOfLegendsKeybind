@@ -15,17 +15,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let statusBarIconMenu = NSMenu()
     lazy var availableKeybinds: [Keybind] = KeybindManager.default.availableKeybinds()
     
-    var applicationKeyWindow: NSWindow?
+    var applicationMainWindow: NSWindow?
     var mainViewController: ViewController?
 
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setupStatusBarIcon()
-        applicationKeyWindow = NSApplication.shared.keyWindow
+        applicationMainWindow = NSApplication.shared.mainWindow
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        applicationKeyWindow?.makeKeyAndOrderFront(self)
+        applicationMainWindow?.makeKey()
+        applicationMainWindow?.orderFrontRegardless()
         return true
     }
 }

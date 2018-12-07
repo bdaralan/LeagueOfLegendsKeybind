@@ -59,7 +59,8 @@ class ViewController: NSViewController {
     /// Copy all keybind json files from a folder to LoLKeybind folder
     @IBAction private func loadKeybindsBtnClicked(_ sender: NSButton) {
         guard let window = view.window else { return }
-        openPanel.beginSheetModal(for: window) { (respone) in
+        openPanel.beginSheetModal(for: window) { (response) in
+            guard response != .cancel else { return }
             guard let selectedDir = self.openPanel.directoryURL else {
                 self.showAlert(title: "Failed", message: "Cannot access directory", runModel: true)
                 return
