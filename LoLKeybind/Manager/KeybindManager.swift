@@ -60,20 +60,20 @@ class KeybindManager {
         return persistedSettingFileUrl
     }
     
-    var availableKeybinds: [Keybind] {
+    
+    // MARK: - Function
+    
+    func availableKeybinds() -> [Keybind] {
         guard let keybindDir = lolKeybindDir else { return [] }
         let keybinds = fetchKeybinds(at: keybindDir)
         return keybinds
     }
     
-    var previousSetKeybind: Keybind? {
+    func previousSetKeybind() -> Keybind? {
         guard let path = UserDefaults.standard.string(forKey: kLastSetKeybind) else { return nil }
         let url = URL(fileURLWithPath: path)
         return Keybind(fileName: url.lastPathComponentWithoutExtension, fileUrl: url)
     }
-    
-    
-    // MARK: - Function
     
     func copyFilesToLoLKeybindDirectory(filesToCopy urls: [URL], completion: (Error?) -> Void) {
         guard let lolKeybindDir = lolKeybindDir else {
@@ -164,7 +164,7 @@ class KeybindManager {
             for dict in filesKeyDict where dict["name"] as? String == "Input.ini" {
                 foundInputINIToReplace = true
                 let fileExtension = "json"
-                let fileName = nonRepeatedFileName(forDirectory: lolKeybindDir, fileName: "Copied Keybind", fileExtension: fileExtension)
+                let fileName = createNonRepeatedFileNameInDirectory(lolKeybindDir, fileName: "Client Current Keybind", fileExtension: fileExtension)
                 let urlToWrite = lolKeybindDir.appendingPathComponent(fileName).appendingPathExtension(fileExtension)
                 let clientKeybindData = try JSONSerialization.data(withJSONObject: dict, options: [])
                 try clientKeybindData.write(to: urlToWrite, options: .atomic)
@@ -225,8 +225,8 @@ class KeybindManager {
         return keybinds
     }
     
-    func nonRepeatedFileName(forDirectory url: URL, fileName: String, fileExtension: String) -> String {
-        let usedFileNames = jsonFilesInDirectory(url: url).filter({ $0.pathExtension == fileExtension}).compactMap({ $0.lastPathComponentWithoutExtension })
+    func createNonRepeatedFileNameInDirectory(_ directoryUrl: URL, fileName: String, fileExtension: String) -> String {
+        let usedFileNames = jsonFilesInDirectory(url: directoryUrl).filter({ $0.pathExtension == fileExtension}).compactMap({ $0.lastPathComponentWithoutExtension })
         
         // assuming user will not have 1000 names of the same file σ(^_^;)
         var result = fileName

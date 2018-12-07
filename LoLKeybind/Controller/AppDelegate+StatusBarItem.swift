@@ -19,6 +19,17 @@ enum AppStatusBarIconStyle: String { // where String is the correspoding asset's
 }
 
 
+// MARK: - Computed Property
+
+extension AppDelegate {
+    
+    var currentStatusBarIconStyle: AppStatusBarIconStyle {
+        let currentStyle = UserDefaults.standard.string(forKey: AppStatusBarIconStyle.kPreferredIconStyle) ?? ""
+        return AppStatusBarIconStyle(rawValue: currentStyle) ?? .default
+    }
+}
+
+
 // MARK: - Function
 
 extension AppDelegate {
@@ -54,11 +65,13 @@ extension AppDelegate {
     func setupStatusBarIcon() {
         let preferredStyleString = UserDefaults.standard.string(forKey: AppStatusBarIconStyle.kPreferredIconStyle) ?? ""
         let preferredStyle = AppStatusBarIconStyle(rawValue: preferredStyleString) ?? .default
+        setAppStatusBarIconStyle(preferredStyle)
+        
         statusBarIcon.menu = statusBarIconMenu
         statusBarIconMenu.delegate = self
         statusBarIconMenu.showsStateColumn = true
-        setAppStatusBarIconStyle(preferredStyle)
         reloadStatusBarIconMenuItems()
+        setupStatusBarItemNotificationObserver()
     }
     
     func setAppStatusBarIconStyle(_ style: AppStatusBarIconStyle) {
@@ -67,35 +80,81 @@ extension AppDelegate {
         UserDefaults.standard.setValue(style.rawValue, forKey: AppStatusBarIconStyle.kPreferredIconStyle)
     }
     
-    @objc private func reloadStatusBarIconMenuItems() {
+    @objc private func reloadStatusBarIconMenuItems() { // TODO: refactor this
         let keybindManager = KeybindManager.default
-        
-        availableKeybinds = keybindManager.availableKeybinds
+        availableKeybinds = keybindManager.availableKeybinds()
         statusBarIconMenu.removeAllItems()
         
-        guard !availableKeybinds.isEmpty else {
-            statusBarIconMenu.addItem(.init(title: "None", action: nil, keyEquivalent: ""))
-            return
+        let keybindMenuItems = createMenuItems(for: availableKeybinds, selectKeybind: keybindManager.previousSetKeybind())
+        let appFeatureMenuItems = createAppFeatureMenuItems()
+    
+        if keybindMenuItems.isEmpty {
+            let keybindNotFoundMenuItem = NSMenuItem(title: "No Keybind", action: nil, keyEquivalent: "")
+            statusBarIconMenu.addItem(keybindNotFoundMenuItem)
         }
-        
-        let previousSetKeybind = keybindManager.previousSetKeybind
-        let activateKeybind = #selector(activateSeletecKeybind(_:))
-        
-        availableKeybinds.enumerated().forEach { (index, keybind) in
-            let menuItem = NSMenuItem(title: keybind.fileName, action: activateKeybind, keyEquivalent: "")
-            menuItem.tag = index
-            menuItem.state = keybind == previousSetKeybind ? .on : .off
-            statusBarIconMenu.addItem(menuItem)
-        }
+        keybindMenuItems.forEach({ statusBarIconMenu.addItem($0) })
+        statusBarIconMenu.addItem(.separator())
+        appFeatureMenuItems.forEach({ statusBarIconMenu.addItem($0) })
     }
     
-    func setupStatusBarItemNotificationObserver(_ observer: Any) {
+    /// Create keybind menu items for the given keybinds where item tag match with the each keybind index.
+    private func createMenuItems(for keybinds: [Keybind], selectKeybind: Keybind?) -> [NSMenuItem] {
+        let activateKeybind = #selector(activateSeletecKeybind(_:))
+        let menuItems = keybinds.enumerated().compactMap { (index, keybind) -> NSMenuItem in
+            let item = NSMenuItem(title: keybind.fileName, action: activateKeybind, keyEquivalent: "")
+            item.tag = index
+            item.state = keybind == selectKeybind ? .on : .off
+            return item
+        }
+        return menuItems
+    }
+    
+    private func createAppFeatureMenuItems() -> [NSMenuItem] {
+        var menuItems: [NSMenuItem] = []
+        let iconColorOrBlack = currentStatusBarIconStyle == .color ? "Black" : "Color"
+        menuItems.append(.init(title: "Save Client's Current Keybind", action: #selector(saveClientCurrentKeybind), keyEquivalent: "s"))
+        menuItems.append(.init(title: "Use \(iconColorOrBlack) Status Bar Icon", action: #selector(toggleStatusBarIcon), keyEquivalent: ""))
+        menuItems.append(.init(title: "Show App", action: #selector(openApplication), keyEquivalent: ""))
+        return menuItems
+    }
+    
+    func setupStatusBarItemNotificationObserver() {
         let notificationCenter = NotificationCenter.default
         let reloadStatusBarMenuItems = #selector(reloadStatusBarIconMenuItems)
         let keybindDidSet = Notification.Name(kApplicationDidSetKeybind)
         let keybindDidDelete = Notification.Name(kApplicationDidDeleteKeybind)
-        notificationCenter.addObserver(observer, selector: reloadStatusBarMenuItems, name: keybindDidSet, object: nil)
-        notificationCenter.addObserver(observer, selector: reloadStatusBarMenuItems, name: keybindDidDelete, object: nil)
+        notificationCenter.addObserver(self, selector: reloadStatusBarMenuItems, name: keybindDidSet, object: nil)
+        notificationCenter.addObserver(self, selector: reloadStatusBarMenuItems, name: keybindDidDelete, object: nil)
+    }
+}
+
+
+// MARK: - Menu Item Action
+
+extension AppDelegate {
+    
+    @objc private func openApplication() {
+        applicationKeyWindow?.makeKeyAndOrderFront(self)
+    }
+    
+    @objc private func saveClientCurrentKeybind() {
+        KeybindManager.default.saveClientCurrentKeybind { (keybindUrl, error) in
+            guard let keybindUrl = keybindUrl else {
+                let alert = NSAlert(error: error!)
+                alert.runModal()
+                return
+            }
+            
+            mainViewController?.askUserToRenameSavedKeybindFile(url: keybindUrl, completion: { (renamed) in
+                self.mainViewController?.reloadKeybindPopUpBtn()
+                self.reloadStatusBarIconMenuItems()
+            })
+        }
+    }
+    
+    @objc private func toggleStatusBarIcon() {
+        let style: AppStatusBarIconStyle = currentStatusBarIconStyle == .color ? .black : .color
+        setAppStatusBarIconStyle(style)
     }
 }
 

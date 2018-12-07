@@ -31,6 +31,10 @@ class ViewController: NSViewController {
         super.viewDidLoad()
         keybindPopUpBtn.action = #selector(handlePopupBtnDidSelectItem)
         keybindPopUpBtn.target = self
+        
+        // must be able to get app delegate
+        let appDelegate = NSApplication.shared.delegate as! AppDelegate
+        appDelegate.mainViewController = self
     }
     
     override func viewWillAppear() {
@@ -82,7 +86,7 @@ class ViewController: NSViewController {
             if let error = error {
                 showErrorAlert(error: error)
             } else if let url = url {
-                askUserToNameSavedFile(url: url) { renamed in
+                askUserToRenameSavedKeybindFile(url: url) { renamed in
                     self.reloadKeybindPopUpBtn()
                 }
             }
@@ -153,10 +157,10 @@ class ViewController: NSViewController {
         }
     }
     
-    private func reloadKeybindPopUpBtn() {
+    func reloadKeybindPopUpBtn() {
         let keybindManger = KeybindManager.default
         
-        availableKeybinds = keybindManger.availableKeybinds
+        availableKeybinds = keybindManger.availableKeybinds()
         keybindPopUpBtn.removeAllItems()
         
         if availableKeybinds.isEmpty {
@@ -165,9 +169,9 @@ class ViewController: NSViewController {
             keybindPopUpBtn.addItems(withTitles: availableKeybinds.compactMap({ $0.fileName }))
         }
         
-        let previousSetKeybindName = keybindManger.previousSetKeybind?.fileName ?? ""
+        let previousSetKeybind = keybindManger.previousSetKeybind()
         for (index, item) in keybindPopUpBtn.itemArray.enumerated() {
-            item.state = item.title == previousSetKeybindName ? .on : .off
+            item.state = item.title == previousSetKeybind?.fileName ? .on : .off
             item.state == .on ? keybindPopUpBtn.selectItem(at: index) : ()
         }
         
@@ -175,29 +179,20 @@ class ViewController: NSViewController {
         deleteKeybindBtn.isEnabled = keybindPopUpBtn.isEnabled
     }
     
-    private func askUserToNameSavedFile(url: URL, completion: @escaping (Bool) -> Void) {
-        let fileDefaultName = url.lastPathComponentWithoutExtension
+    func askUserToRenameSavedKeybindFile(url: URL, completion: @escaping (Bool) -> Void) {
+        let currentFileName = url.lastPathComponentWithoutExtension
+        let message = "Saved Client's Current Keybind"
+        let informativeText = "File name cannot be duplicate"
+        let textFieldAlert = NSAlert.textFieldAlert(messageText: message, informativeText: informativeText, textFieldString: currentFileName)
         
-        let alert = NSAlert()
-        alert.messageText = "Saved Current Keybind"
-        alert.informativeText = "File name (cannot use duplicated name)"
-        alert.alertStyle = .informational
-        
-        guard let window = view.window else {
-            alert.runModal()
-            return
-        }
-        
-        let textField = NSTextField(string: fileDefaultName)
-        alert.accessoryView = textField
-        alert.accessoryView?.frame.size.width = 200
-        
-        alert.beginSheetModal(for: window) { (response) in
-            let inputName = textField.stringValue.trimmingCharacters(in: .whitespaces)
-            let fileNewName = inputName.isEmpty ? fileDefaultName : inputName
+        // force unwrapped view's window
+        textFieldAlert.beginSheetModal(for: view.window!) { (response) in
+            let textField = textFieldAlert.accessoryView as! NSTextField
+            let inputFileName = textField.stringValue.trimmingCharacters(in: .whitespaces)
+            let fileNewName = inputFileName.isEmpty ? currentFileName : inputFileName
             KeybindManager.default.renameFile(at: url, to: fileNewName) { (error) in
                 if error != nil {
-                    self.askUserToNameSavedFile(url: url, completion: completion)
+                    self.askUserToRenameSavedKeybindFile(url: url, completion: completion)
                 } else {
                     self.showAlert(title: "Done", message: "\(fileNewName) keybind is saved", runModel: false)
                     completion(error != nil)

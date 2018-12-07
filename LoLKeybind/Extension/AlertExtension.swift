@@ -26,4 +26,16 @@ extension NSAlert {
         let alert = NSAlert(error: error)
         alert.runModal()
     }
+    
+    static func textFieldAlert(messageText: String, informativeText: String, textFieldString: String) -> NSAlert {
+        let alert = NSAlert()
+        alert.messageText = messageText
+        alert.informativeText = informativeText
+        alert.alertStyle = .informational
+        
+        let textField = NSTextField(string: textFieldString)
+        alert.accessoryView = textField
+        alert.accessoryView?.frame.size.width = 200
+        return alert
+    }
 }
